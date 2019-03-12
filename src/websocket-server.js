@@ -1,8 +1,8 @@
 const WebSocket = require('ws');
 
-function init(logger) {
+function init(logger, config) {
   logger.info('Initializing websocket server');
-  const wss = new WebSocket.Server({ port: 8080 });
+  const wss = new WebSocket.Server({ port: config.webSocketPort });
 
   wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
