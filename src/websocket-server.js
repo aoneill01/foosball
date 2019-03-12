@@ -1,7 +1,6 @@
 const WebSocket = require('ws');
-const logger = require('../config/winston');
 
-function init() {
+function init(logger) {
   logger.info('Initializing websocket server');
   const wss = new WebSocket.Server({ port: 8080 });
 
