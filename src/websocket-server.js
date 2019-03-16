@@ -1,15 +1,15 @@
 const WebSocket = require('ws');
+const GameState = require('./game-state');
 
 function init(logger, config) {
   logger.info('Initializing websocket server');
   const wss = new WebSocket.Server({ port: config.webSocketPort });
+  const state = new GameState();
 
   wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
       logger.info('received: %s', message);
     });
-
-    ws.send('something');
   });
 
   function broadcast(data) {
@@ -20,7 +20,11 @@ function init(logger, config) {
     });
   }
 
-  setInterval(() => broadcast(new Date().toTimeString()), 1000);
+  // eslint-disable-next-line no-plusplus
+  setInterval(() => {
+    state.step();
+    broadcast(JSON.stringify(state.toJson()));
+  }, 50);
 }
 
 module.exports = {

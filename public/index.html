@@ -1,8 +1,34 @@
 <html>
-    <head>
-        <title>Foosball</title>
-    </head>
-    <body>
-        <h1>Hello, World!</h1>
-    </body>
+  <head>
+    <title>Foosball</title>
+  </head>
+  <body>
+    <h1>Hello, World!</h1>
+    <canvas id="screen" width="560" height="300"></canvas>
+  </body>
+
+  <script>
+    let socket = new WebSocket('ws://localhost:8080');
+    let count = 0;
+    const canvas = document.getElementById('screen');
+    const ctx = canvas.getContext('2d');
+
+    function update(state) {
+      const scale = canvas.width / 56;
+      ctx.fillStyle = 'green';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(scale * state.b.x - 2, scale * state.b.y - 2, 4, 4);
+    }
+
+    socket.onmessage = function(event) {
+      count++;
+      update(JSON.parse(event.data));
+    };
+
+    setInterval(() => {
+      console.log(count);
+      count = 0;
+    }, 1000);
+  </script>
 </html>
